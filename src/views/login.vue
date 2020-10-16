@@ -1,0 +1,235 @@
+<router-view></router-view>
+<template>
+    <div id="app">
+        <div class="img1">
+            <div id="context">
+                <div class="img2"></div>
+                <div id="login">
+                    <div id="book">
+                        <div class="img3"></div>
+                        <div id="boke">博客</div>
+                    </div>
+                    <div id="line"></div>
+                    <div id="user">
+                        <div class="input">
+                            <img src="../assets/login_user.png" style="width:15px;height:16px;margin-right: 26px;margin-left: 11px;margin-top: 2px">
+                            <input class="i-input" type="text" placeholder="请输入用户名" v-model="loginForm.username">
+                        </div>
+                    </div>
+                    <div id="pwd">
+                        <div class="input">
+                            <img src="../assets/login_pwd.png" style="width:15px;height:16px;margin-right: 26px;margin-left: 11px;margin-top: 2px">
+                            <input class="i-input" type="password" placeholder="请输入密码" v-model="loginForm.password">
+                        </div>
+                    </div>
+                    <div id="item">
+                        <div style="margin: 10px;">
+                            <input style="position: absolute;left: 10px;width: 20px;height: 20px;" type="checkbox" name="jizhu" title="" lay-skin="primary">
+                            <span id="remember_pwd">记录密码</span>
+                            <button id="regist" @click="regist">注册</button>
+                            <span style="position: absolute;left: 305px;color: aqua">|</span>
+                            <button id="forget">忘记密码</button>
+                        </div>
+                    </div>
+                    <div class="btn_login">
+                        <button id="btn" @click="login">登录</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "login",
+        data(){
+            return{
+                msg:"登录界面",
+                loginForm:{
+                    username:'',
+                    password:''
+                }
+            }
+        },
+        methods:{
+            regist(){
+                this.$router.push({name:'regist'})
+            },
+            login(){
+                let _this=this;
+                this.$axios.post('account/login',{
+                    uid:_this.loginForm.uid,
+                    password:_this.loginForm.password
+                }).then(res=>{
+                    if(res.data.code===200){
+                        alert('登陆成功')
+                    }
+                    else{
+                        alert('密码错误')
+                    }
+                }).catch(
+                )
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .img1{
+        background-size: 100% 100%;
+        background: url('../assets/login_back.png') center center no-repeat;
+        height: 100%;
+        position: fixed;
+        width: 100%;
+
+    }
+    #context{
+        width: 1000px;
+        height: 540px;
+        position: absolute;
+        left: 460px;
+        top: 270px;
+        display: flex;
+    }
+    .img2{
+
+        background: url('../assets/login_left.png') center center no-repeat;
+        height: 500px;
+        width: 540px;
+    }
+    #login{
+        width: 500px;
+        height: 540px;
+        background-color: #FFFFFF;
+        position:relative;
+    }
+    #book{
+        display: flex;
+        position: absolute;
+        right:198px ;
+        top:69px;
+        width: 106px;
+        height: 38px;
+    }
+    #boke{
+        text-align: center;
+        width: 57px;
+        height: 28px;
+        font-family: Source Han Sans CN;
+        font-size: 24px;
+        font-weight: normal;
+        font-stretch: normal;
+        line-height: 22px;
+        letter-spacing: 1px;
+        color: #333333;
+        margin-top: 8px;
+        margin-left: 16px;
+    }
+    .img3{
+
+        background: url('../assets/book.png') center center no-repeat;
+        height: 38px;
+        width: 32px;
+    }
+    #line{
+        position: absolute;
+        right:70px ;
+        top:162px;
+        width: 360px;
+        height: 1px;
+        background-color: #dddddd;
+        border: solid 1px #000000;
+    }
+    #user{
+        position: absolute;
+        right:70px ;
+        top:205px;
+        width: 360px;
+        height: 40px;
+        background-color: #ffffff;
+        border-radius: 4px;
+        border: solid 1px #cccccc;
+    }
+    .input{
+        display: flex;
+        margin-top: 10px;
+    }
+    #pwd{
+        position: absolute;
+        right:70px ;
+        top:270px;
+        width: 360px;
+        height: 40px;
+        background-color: #ffffff;
+        border-radius: 4px;
+        border: solid 1px #cccccc;
+    }
+    .i-input{
+        border: 0;
+        outline: none;
+
+    }
+    #item{
+        position: absolute;
+        right:354px ;
+        top:325px;
+        width: 80px;
+    }
+    #remember_pwd{
+        width: 56px;
+        height: 16px;
+        font-family: Microsoft YaHei UI;
+        font-size: 13px;
+        font-weight: normal;
+        font-stretch: normal;
+        line-height: 22px;
+        letter-spacing: 1px;
+        color: #666666;
+        position: absolute;
+        left: 40px;
+    }
+    #regist{
+        position: absolute;
+        left: 270px;
+        border: 0;
+        background-color: #ffffff;
+        color: aqua;
+        margin-top: 2px;
+    }
+    #forget{
+        position: absolute;
+        left: 310px;
+        border: 0;
+        background-color: #ffffff;
+        color: aqua;
+        margin-top: 2px;
+    }
+    .btn_login{
+        position: absolute;
+        right:70px ;
+        top:381px;
+        width: 360px;
+        height: 40px;
+        background-color: #6d98f9;
+        box-shadow: 0px 1px 6px 0px
+        rgba(109, 152, 249, 0.5);
+        border-radius: 4px;
+        text-align: center;
+    }
+    #btn{
+        width: 80px;
+        height: 20px;
+        font-family: Microsoft YaHei UI;
+        font-size: 16px;
+        font-weight: normal;
+        font-stretch: normal;
+        line-height: 22px;
+        letter-spacing: 2px;
+        color: #ffffff;
+        background-color: rgba(109, 152, 249, 0.5);
+        border: 0px;
+        margin-top: 5px;
+    }
+
+</style>
