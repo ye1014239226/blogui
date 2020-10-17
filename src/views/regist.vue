@@ -13,17 +13,17 @@
                     <div id="user">
                         <div class="input">
                             <img src="../assets/login_user.png" style="width:15px;height:16px;margin-right: 26px;margin-left: 11px;margin-top: 2px">
-                            <input class="i-input" type="text" placeholder="请输入用户名">
+                            <input class="i-input" type="text" placeholder="请输入用户名" v-model="registForm.account">
                         </div>
                     </div>
                     <div id="pwd">
                         <div class="input">
                             <img src="../assets/login_pwd.png" style="width:15px;height:16px;margin-right: 26px;margin-left: 11px;margin-top: 2px">
-                            <input class="i-input" type="password" placeholder="请输入密码">
+                            <input class="i-input" type="password" placeholder="请输入密码" v-model="registForm.password">
                         </div>
                     </div>
                     <div class="btn_regist">
-                        <button id="btn">立即注册</button>
+                        <button id="btn" @click="regist">立即注册</button>
                     </div>
                     <div class="item">
                         <span>已有账号</span>
@@ -40,12 +40,30 @@
         name: "login",
         data(){
             return{
-                msg:"登录界面"
+                msg:"登录界面",
+                registForm:{
+                    account:'',
+                    password:'',
+                }
             }
         },
         methods:{
             login(){
                 this.$router.push({name:'login'})
+            },
+            regist(){
+                let _this=this;
+                this.$axios.post('/api/user/register',{
+                    account:_this.registForm.account,
+                    password:_this.registForm.password,
+                }).then(res=>{
+                    if(res.data.code===200){
+                        alert("注册成功");
+                        this.$router.push({
+                            name:'login'
+                        })
+                    }
+                })
             }
         }
     }

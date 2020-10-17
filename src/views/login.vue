@@ -24,7 +24,7 @@
                     </div>
                     <div id="item">
                         <div style="margin: 10px;">
-                            <input style="position: absolute;left: 10px;width: 20px;height: 20px;" type="checkbox" name="jizhu" title="" lay-skin="primary">
+                            <input style="position: absolute;left: 10px;width: 20px;height: 20px;" type="checkbox" name="jizhu" title="" lay-skin="primary" v-model="loginForm.remember">
                             <span id="remember_pwd">记录密码</span>
                             <button id="regist" @click="regist">注册</button>
                             <span style="position: absolute;left: 305px;color: aqua">|</span>
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="btn_login">
-                        <button id="btn" @click="login">登录</button>
+                        <button id="btn" @click="login()">登录</button>
                     </div>
                 </div>
             </div>
@@ -48,8 +48,9 @@
                 msg:"登录界面",
                 loginForm:{
                     username:'',
-                    password:''
-                }
+                    password:'',
+                },
+                checked:true,
             }
         },
         methods:{
@@ -58,18 +59,60 @@
             },
             login(){
                 let _this=this;
-                this.$axios.post('account/login',{
-                    uid:_this.loginForm.uid,
+                let self=this;
+                if(self.checked==true){
+                    console.log("checked==true");
+                    self.setCookie(self.loginForm.username,self.loginForm.password,7);
+                }else{
+                    console.log("清空Cookie");
+                    self.clearCookie();
+                }
+                this.$axios.post('/api/user/login',{
+                    account:_this.loginForm.username,
                     password:_this.loginForm.password
                 }).then(res=>{
                     if(res.data.code===200){
-                        alert('登陆成功')
+                        this.$axios.post('/api/user/finduserbyaccount?account='+_this.loginForm.username).then(user_res=>{
+                            console.log(user_res.data);
+                            localStorage.setItem('userid',user_res.data.body.uid);
+                            alert('登陆成功')
+                            this.$router.push(
+                                {name:'Home'}
+                            )
+                        })
                     }
                     else{
                         alert('密码错误')
                     }
                 }).catch(
                 )
+                console.log(this.loginForm.username)
+            },
+            //设置cookie
+            setCookie(c_name, c_pwd, exdays) {
+                var exdate = new Date(); //获取时间
+                exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+                window.document.cookie = "account" + "=" + c_name + ";path=/;expires=" + exdate.toGMTString();
+                window.document.cookie = "password" + "=" + c_pwd + ";path=/;expires=" + exdate.toGMTString();
+            },
+            //读取cookie
+            getCookie: function() {
+                if (document.cookie.length > 0) {
+                    var arr = document.cookie.split('; '); //这里显示的格式需要切割一下自己可输出看下
+                    for (var i = 0; i < arr.length; i++) {
+                        var arr2 = arr[i].split('='); //再次切割
+                        //判断查找相对应的值
+                        if (arr2[0] == 'userName') {
+                            this.loginForm.username = arr2[1]; //保存到保存数据的地方
+                        } else if (arr2[0] == 'userPwd') {
+                            this.loginForm.password = arr2[1];
+                        }
+                    }
+                }
+            },
+            //清除cookie
+            clearCookie: function() {
+                this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
             }
         }
     }

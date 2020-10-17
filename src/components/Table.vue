@@ -39,7 +39,6 @@
 <script>
     export default {
         name: "Table",
-
     }
 </script>
 
