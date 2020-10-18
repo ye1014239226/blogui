@@ -82,7 +82,7 @@
                         })
                     }
                     else{
-                        alert('密码错误')
+                        alert(res.data.message)
                     }
                 }).catch(
                 )
@@ -130,9 +130,11 @@
     #context{
         width: 1000px;
         height: 540px;
-        position: absolute;
-        left: 460px;
-        top: 270px;
+        position:absolute;
+        top:50%;
+        left:50%;
+        margin-left: -500px;
+        margin-top: -270px;
         display: flex;
     }
     .img2{

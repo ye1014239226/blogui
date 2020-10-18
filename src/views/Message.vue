@@ -1,13 +1,13 @@
 <template>
     <div>
-        <Head></Head>
+        <Head v-if="uid!=''" :uid="uid" :isauthor="isauthor"></Head>
         <div>
             <div class="context">
                 <div class="context1">
                     <div class="head">
                         <span id="context_span">{{message.title}}</span>
-                        <el-button v-if="islike">已收藏</el-button>
-                        <el-button v-else>未收藏</el-button>
+                        <el-button v-if="iscollect" @click="collect">已收藏</el-button>
+                        <el-button v-else  @click="collect">未收藏</el-button>
                     </div>
                     <div style="width: 1000px;height: 1px;background-color: #dde4eb;margin-top: 15px"></div>
                     <Tag :dynamicTags="dynamicTags" class="tag"></Tag>
@@ -58,6 +58,7 @@
     import Comment from "@/components/Comment";
     export default {
         components: {Head,Tag,text_item,Comment},
+        inject:['reload'],
         name: "Message",
         data(){
             return{
@@ -73,36 +74,11 @@
                     '高级JavaScript知识。JavaScript是Web的编程语言。所有现代的HTML页面都使用JavaScript。JavaScript 非常容易学。本教程将教你学习从初级到\n' +
                     '高级JavaScript知识。',
                 fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
-                info:[{
-                    avator:'',
-                    author:'李雷',
-                    time:'14:25',
-                    text:'文章写的非常好，内容详细易懂，对初学者有很大的帮助，感谢作者~',
-                    like:256,
-                    comment:0,
-                    reply:[{
-                        username:'路人甲',
-                        reply_text:'同意你的观点，作者大大很棒'
-                    },{
-                        username:'路人乙',
-                        reply_text:'同意你的观点，作者大大很棒'
-                    },{
-                        username:'路人丙',
-                        reply_text:'同意你的观点，作者大大很棒'
-                    }]
-                },{
-                    avator:'',
-                    author:'李雷',
-                    time:'14:25',
-                    text:'文章写的非常好，内容详细易懂，对初学者有很大的帮助，感谢作者~',
-                    like:222,
-                    comment:10,
-                    reply:[{
-                        username:'路人甲',
-                        reply_text:'同意你的观点，作者大大很棒'
-                    }]
-                }],
+                info:[],
                 textarea: '',
+                accountid:localStorage.getItem('userid'),
+                iscollect:false,
+                isauthor:false,
             }
         },
         watch:{
@@ -127,11 +103,29 @@
             getParams(){
                 this.uid = this.$route.query.uid
                 console.log('getParams',this.uid)
-                this.$axios.post('/api/article/findbyuid?uid='+this.$route.query.uid).then(res=>{
-                        this.message=res.data.body[0]
+                this.$axios.post('/api/article/findarticle?uid='+this.$route.query.uid).then(res=>{
+                        this.message=res.data.body
                         console.log(this.message)
                 }).catch(
                 )
+                this.$axios.post('/api/article/iscollectarticle?articleId='+this.uid+'&accountId='+this.accountid).then(res=>{
+                    console.log(res.data)
+                    this.iscollect=res.data
+                })
+                this.$axios.post('/api/article/ismyarticle?articleId='+this.uid+'&accountId='+this.accountid).then(res=>{
+                    this.isauthor=res.data
+                })
+                this.$axios.post('/api/comment/findAllCommentid?articleId='+this.uid).then(res=>{
+                    console.log(res.data.body)
+                    this.info=res.data.body
+                })
+            },
+            collect(){
+                let _this=this
+                this.$axios.post('api/article/collectarticle?articleId='+_this.uid+'&accountId='+ _this.accountid).then(res=>{
+                    console.log(res.data)
+                })
+                this.reload()
             }
         },
     }

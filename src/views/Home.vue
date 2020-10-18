@@ -8,11 +8,11 @@
                 </div>
                 <div id="head_right">
                     <div id="search">
-                        <input style="border: 0px;margin-left: 10px;margin-top: 8px" placeholder="搜索">
-                        <el-button type="primary" class="icon_btn"><i class="el-icon-search" style="color: black"></i></el-button>
+                        <input style="border: 0px;margin-left: 10px;margin-top: 8px" placeholder="搜索" v-model="search_title">
+                        <el-button type="primary" class="icon_btn" @click="title_search"><i class="el-icon-search" style="color: black"></i></el-button>
                     </div>
                     <div id="icon_item">
-                        <el-button type="primary" class="icon_btn1"><i class="el-icon-circle-plus" style="color: blue"></i></el-button>
+                        <el-button type="primary" class="icon_btn1" @click="add"><i class="el-icon-circle-plus" style="color: blue"></i></el-button>
                         <el-button type="primary" class="icon_btn1"><i class="el-icon-message-solid" style="color: black"></i></el-button>
                         <el-button type="primary" class="icon_btn1"><i class="el-icon-setting" style="color: black"></i></el-button>
                     </div>
@@ -35,6 +35,7 @@
         name: "Home",
         data(){
             return{
+                search_title:'',
                 username:'yeyeye',
                 manger:{},
                 total:0,
@@ -51,10 +52,11 @@
         },
         methods:{
             getData(){
-                this.$axios.post('/api/article/findAll').then(res=>{
+                this.$axios.post('/api/article/findAlluser1').then(res=>{
                     this.manger=res.data;
+                    console.log(this.manger.body[0].isDeleted)
                     for(const i in this.manger){
-                        this.$set(this.list[0],i,this.manger[i])
+                                this.$set(this.list[0],i,this.manger[i])
                     }
                     console.log(this.list)
                 }).catch(function(){
@@ -64,6 +66,22 @@
                     console.log(res.data.body)
                 })
             },
+            add(){
+                this.$router.push({name:'Add'})
+            },
+            title_search(){
+                console.log(this.search_title)
+               this.$axios.post('/api/article/findtitleandcomment1?title='+this.search_title).then(res=>{
+                    this.manger=res.data;
+                    /*console.log(this.manger.body[0].isDeleted)
+                    for(const i in this.manger){
+                        this.$set(this.list[0],i,this.manger[i])
+                    }
+                    console.log(this.list)*/
+                    console.log(this.manger)
+                }).catch(function(){
+                })
+            }
         }
     }
 </script>
