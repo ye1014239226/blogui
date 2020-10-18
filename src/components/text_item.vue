@@ -3,17 +3,17 @@
         <div class="manger">
             <div class="left">
                 <i class="el-icon-user"></i>
-                <span style="margin-left: 5px">{{}}</span>
+                <span style="margin-left: 5px">{{message.name}}</span>
                 <i class="el-icon-time" style="margin-left: 12px"></i>
-                <span style="margin-left: 5px">{{}}</span>
+                <span style="margin-left: 5px">{{message.create_date}}</span>
             </div>
             <div class="right">
                 <el-button type="primary" class="icon_btn"><i class="el-icon-view" style="color: black"></i></el-button>
-                <span>{{message.viewNum}}</span>
+                <span>{{message.view_num}}</span>
                 <el-button type="primary" class="icon_btn"><i class="el-icon-chat-dot-square" style="color: black"></i></el-button>
-                <span>{{message.commentNum}}</span>
+                <span>{{message.comment_num}}</span>
                 <el-button type="primary" class="icon_btn"><i class="el-icon-star-off" style="color: black"></i></el-button>
-                <span >{{message.likeNum}}</span>
+                <span >{{message.like_num}}</span>
             </div>
         </div>
         <div id="line"></div>

@@ -43,7 +43,7 @@
                         </el-input>
                     </div>
                     <div class="comment_btn">
-                        <el-button type="text" id="comment_btn">发送</el-button>
+                        <el-button type="text" id="comment_btn" @click="comment">发送</el-button>
                     </div>
                 </div>
             </div>
@@ -69,16 +69,14 @@
                 dynamicTags: ['标签一', '标签二', '标签三'],
                 inputVisible: false,
                 inputValue: '',
-                text:'JavaScript是Web的编程语言。所有现代的HTML页面都使用JavaScript。JavaScript 非常容易学。本教程将教你学习从初级到\n' +
-                    '高级JavaScript知识。JavaScript是Web的编程语言。所有现代的HTML页面都使用JavaScript。JavaScript 非常容易学。本教程将教你学习从初级到\n' +
-                    '高级JavaScript知识。JavaScript是Web的编程语言。所有现代的HTML页面都使用JavaScript。JavaScript 非常容易学。本教程将教你学习从初级到\n' +
-                    '高级JavaScript知识。',
+                text:'',
                 fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
                 info:[],
                 textarea: '',
                 accountid:localStorage.getItem('userid'),
                 iscollect:false,
                 isauthor:false,
+                time:''
             }
         },
         watch:{
@@ -86,6 +84,7 @@
         },
         created(){
           this.getParams()
+            this.getTime()
         },
         methods:{
             handleRemove(file, fileList) {
@@ -103,8 +102,8 @@
             getParams(){
                 this.uid = this.$route.query.uid
                 console.log('getParams',this.uid)
-                this.$axios.post('/api/article/findarticle?uid='+this.$route.query.uid).then(res=>{
-                        this.message=res.data.body
+                this.$axios.post('/api/article/findartbyid1?uid='+this.$route.query.uid).then(res=>{
+                        this.message=res.data.body[0]
                         console.log(this.message)
                 }).catch(
                 )
@@ -126,6 +125,31 @@
                     console.log(res.data)
                 })
                 this.reload()
+            },
+            comment(){
+                this.$axios.post('api/comment/addComment',{
+                    accountId: this.accountid,
+                    articleId: this.$route.query.uid,
+                    commentNum: 0,
+                    content: this.textarea,
+                    createDate: this.time,
+                    likeNum: 0,
+                    uid: 0
+                }).then(res=>{
+                    console.log(res.data.message)
+                })
+                this.reload()
+            },
+            getTime(){
+                var _this = this;
+                let yy = new Date().getFullYear();
+                let mm = new Date().getMonth()+1;
+                let dd = new Date().getDate();
+                let hh = new Date().getHours();
+                let mf = new Date().getMinutes()<10 ? '0'+new Date().getMinutes() : new Date().getMinutes();
+                let ss = new Date().getSeconds()<10 ? '0'+new Date().getSeconds() : new Date().getSeconds();
+                _this.time = yy+'-'+mm+'-'+dd+' '+hh+':'+mf+':'+ss;
+                console.log(this.time)
             }
         },
     }

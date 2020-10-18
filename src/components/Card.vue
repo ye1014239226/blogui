@@ -4,19 +4,19 @@
             <el-card class="box-card">
                 <div v-for="(i,index) in list[0].body.slice((currentPage-1)*pagesize,currentPage*pagesize)" :key="i" class="text item">
                     <div id="box-card">
-                        <div class="card_head" @click="gotoMessage(i.article.uid)">
-                            <span class="head_card">{{i.article.title}}</span>
+                        <div class="card_head" @click="gotoMessage(i.uid)">
+                            <span class="head_card">{{i.title}}</span>
                         </div>
-                        <div v-if="!i.article.thumbnail">
-                            <div class="title_1" @click="gotoMessage(i.article.uid)">
-                                <span class="title">{{i.article.content}}</span>
+                        <div v-if="!i.thumbnail">
+                            <div class="title_1" @click="gotoMessage(i.uid)">
+                                <span class="title">{{i.content}}</span>
                             </div>
                         </div>
                         <div v-else>
-                            <div class="card_title" @click="gotoMessage(i.article.uid)">
+                            <div class="card_title" @click="gotoMessage(i.uid)">
                                 <img src="../assets/book.png"  class="card_img">
                                 <div class="title_2">
-                                    <span class="title1">{{i.article.content}}</span>
+                                    <span class="title1">{{i.content}}</span>
                                 </div>
                             </div>
                         </div>
@@ -24,18 +24,18 @@
                             <div class="manger1">
                                 <div class="left">
                                     <i class="el-icon-user"></i>
-                                    <span style="margin-left: 5px;width: 100px">{{i.user.name}}</span>
+                                    <span style="margin-left: 5px;width: 100px">{{i.name}}</span>
                                     <i class="el-icon-time" style="margin-left: 12px"></i>
-                                    <span style="margin-left: 5px">{{i.article.createDate}}</span>
+                                    <span style="margin-left: 5px">{{i.create_date}}</span>
                                 </div>
                                 <div>
                                     <el-button type="primary" class="icon_btn" style="margin-left: 400px"><i class="el-icon-view" style="color: black"></i></el-button>
-                                    <span>{{i.article.viewNum}}</span>
+                                    <span>{{i.view_num}}</span>
                                     <el-button type="primary" class="icon_btn"><i class="el-icon-chat-dot-square" style="color: black"></i></el-button>
-                                    <span>{{i.article.commentNum}}</span>
+                                    <span>{{i.comment_num}}</span>
                                     <el-button type="primary" class="icon_btn" @click="like(index)"  v-if="islike"><i class="el-icon-star-off" style="color: red"></i></el-button>
                                     <el-button type="primary" class="icon_btn" @click="like(index)"  v-else><i class="el-icon-star-off" style="color: black"></i></el-button>
-                                    <span >{{i.article.likeNum}}</span>
+                                    <span >{{i.like_num}}</span>
                                 </div>
                             </div>
                         </div>

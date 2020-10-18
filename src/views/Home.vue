@@ -73,11 +73,9 @@
                 console.log(this.search_title)
                this.$axios.post('/api/article/findtitleandcomment1?title='+this.search_title).then(res=>{
                     this.manger=res.data;
-                    /*console.log(this.manger.body[0].isDeleted)
                     for(const i in this.manger){
                         this.$set(this.list[0],i,this.manger[i])
                     }
-                    console.log(this.list)*/
                     console.log(this.manger)
                 }).catch(function(){
                 })

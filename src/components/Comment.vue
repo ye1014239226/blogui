@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="title">
-            <span id="title_text">评论区 ({{}})</span>
+            <span id="title_text">评论区 ({{info.length}})</span>
             <el-button type="text" id="title_btn">展开全部</el-button>
         </div>
         <div>
@@ -20,7 +20,7 @@
                         </div>
                         <div class="reply" >
                             <div style="margin-left: 15px">
-                                <el-button type="text" id="reply_btn" @click="getreply(i.uid)">查看评论</el-button>
+                                <el-button type="text" id="reply_btn" @click="getreply(i.uid)">查看回复</el-button>
                             </div>
                             <div v-for="j in reply" :key="j" class="text item">
                                 <div v-if="j.comment_id===i.uid">
@@ -31,10 +31,10 @@
                         <div>
                             <div class="comment_icon">
                                 <el-button type="primary" class="icon_btn" ><i class="el-icon-star-off" style="color: black"></i></el-button>
-                                <span>{{i.like}}</span>
+                                <span>{{i.like_num}}</span>
                                 <el-button type="primary" class="icon_btn"><i class="el-icon-chat-dot-square" style="color: black"></i></el-button>
-                                <span>{{i.comment}}</span>
-                                <el-button type="primary" class="icon_btn1"><i class="el-icon-edit-outline" style="color: black"></i>回复</el-button>
+                                <span>{{i.comment_num}}</span>
+                                <el-button type="primary" class="icon_btn1" @click="open(i.uid)"><i class="el-icon-edit-outline" style="color: black"></i>回复</el-button>
                                 <el-button type="primary" class="icon_btn1"><i class="el-icon-delete" style="color: black"></i>删除</el-button>
                             </div>
                         </div>
@@ -51,7 +51,8 @@
         props:{info:Array},
         data(){
             return{
-                reply:[]
+                reply:[],
+                accountid:localStorage.getItem('userid'),
             }
         },
         methods:{
@@ -60,7 +61,28 @@
                   console.log(res.data)
                   this.reply=res.data.body
               })
-          }
+          },
+          open(index) {
+                this.$prompt('请输入你的回复', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                }).then(({ value }) => {
+                    this.$message({
+                        type: 'success',
+                        message: '你的回复是: '+ value,
+                    });
+                    this.$axios.post('/api/reply/addReply',{
+                        accountId: this.accountid,
+                        commentId: index,
+                        content: value,
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            }
         }
     }
 </script>
