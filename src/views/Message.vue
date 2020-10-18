@@ -25,12 +25,12 @@
                                 :limit="3"
                                 :on-exceed="handleExceed"
                                 :file-list="fileList">
-                            <el-button size="small" type="primary">点击上传</el-button>
-                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                            <el-button size="small" type="primary"  v-if=isauthor>点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip"  v-if=isauthor>只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                     </div>
                     <text_item v-if="message!=null" :message="message"></text_item>
-                    <Comment :info="info"></Comment>
+                    <Comment v-if="info!=''" :info="info" :isauthor="isauthor"></Comment>
                     <div class="comment_input">
                         <div>
                             <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>

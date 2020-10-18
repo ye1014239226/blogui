@@ -35,7 +35,7 @@
                                 <el-button type="primary" class="icon_btn"><i class="el-icon-chat-dot-square" style="color: black"></i></el-button>
                                 <span>{{i.comment_num}}</span>
                                 <el-button type="primary" class="icon_btn1" @click="open(i.uid)"><i class="el-icon-edit-outline" style="color: black"></i>回复</el-button>
-                                <el-button type="primary" class="icon_btn1"><i class="el-icon-delete" style="color: black"></i>删除</el-button>
+                                <el-button type="primary" class="icon_btn1" v-if=isauthor @click="del(i.uid)"><i class="el-icon-delete" style="color: black"></i>删除</el-button>
                             </div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
 <script>
     export default {
         name: "Comment",
-        props:{info:Array},
+        props:{info:Array,isauthor:Boolean},
         data(){
             return{
                 reply:[],
@@ -82,6 +82,15 @@
                         message: '取消输入'
                     });
                 });
+            },
+            del(index) {
+              console.log(index)
+              this.$axios.post('/api/comment/deleteComment',{
+                  uid:index
+              }).then(res=>{
+                    console.log(res.data)
+                    alert('删除成功')
+                })
             }
         }
     }

@@ -2,7 +2,7 @@
     <div>
         <div class="context">
             <el-card class="box-card">
-                <div v-for="(i,index) in list[0].body.slice((currentPage-1)*pagesize,currentPage*pagesize)" :key="i" class="text item">
+                <div v-for="i in list[0].body.slice((currentPage-1)*pagesize,currentPage*pagesize)" :key="i" class="text item">
                     <div id="box-card">
                         <div class="card_head" @click="gotoMessage(i.uid)">
                             <span class="head_card">{{i.title}}</span>
@@ -33,8 +33,8 @@
                                     <span>{{i.view_num}}</span>
                                     <el-button type="primary" class="icon_btn"><i class="el-icon-chat-dot-square" style="color: black"></i></el-button>
                                     <span>{{i.comment_num}}</span>
-                                    <el-button type="primary" class="icon_btn" @click="like(index)"  v-if="islike"><i class="el-icon-star-off" style="color: red"></i></el-button>
-                                    <el-button type="primary" class="icon_btn" @click="like(index)"  v-else><i class="el-icon-star-off" style="color: black"></i></el-button>
+                                    <el-button type="primary" class="icon_btn" @click="like(i.uid)"  v-if=isliked(i.uid)><i class="el-icon-star-off" style="color: red"></i></el-button>
+                                    <el-button type="primary" class="icon_btn" @click="like(i.uid)"  v-elseif=!isliked(i.uid)><i class="el-icon-star-off" style="color: black"></i></el-button>
                                     <span >{{i.like_num}}</span>
                                 </div>
                             </div>
@@ -64,8 +64,12 @@
             return{
                currentPage:1,
                 pagesize:4,
-                islike:true
+                islike:'true',
+                accountid:localStorage.getItem('userid')
             }
+        },
+        create(){
+            this.isliked();
         },
         methods:{
             current_change(currentPage){
@@ -80,18 +84,26 @@
                     }
                 })
             },
-            like(index){
-                console.log(this.list[0].body)
-                if(this.islike){
+            like(id){
+               /* if(this.islike){
                     this.islike=!this.islike
                     console.log(index)
                     console.log(this.list)
-                    this.list[0].body[index].likeNum= this.list[0].body[index].likeNum-1
+                    this.list.like_num= this.list.like_num-1
                 }
                 else{
                     this.islike=!this.islike
                     this.list[0].body[index].likeNum= this.list[0].body[index].likeNum+1
-                }
+                }*/
+                this.$axios.post('/api/article/likearticle?articleId='+id+'&accountId='+this.accountid).then(res=>{
+                    console.log(res.data.message)
+                })
+            },
+            isliked(id){
+               this.$axios.post('/api/article/islikearticle?articleId='+id+'&accountId='+this.accountid).then(res=>{
+                    console.log("输出")
+                    console.log(''+id+res.data)
+                })
             }
 
         }

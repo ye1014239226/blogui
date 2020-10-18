@@ -1,47 +1,100 @@
 <template>
-    <div class="context">
-        <el-card class="box-card">
-            <div v-for="i in manger" :key="i" class="text item">
-                <div id="box-card">
-                    <div class="card_head">
-                        <span class="head_card">{{i.head}}</span>
-                    </div>
-                    <div v-if="i.url==''">
-                        <div class="title_1">
-                            <span class="title">{{i.title}}</span>
+    <div>
+        <div class="context">
+            <el-card class="box-card">
+                <div v-for="(i,index) in list.slice((currentPage-1)*pagesize,currentPage*pagesize)" :key="i" class="text item">
+                    <div id="box-card">
+                        <div class="card_head" @click="gotoMessage(i.uid)">
+                            <span class="head_card">{{i.title}}</span>
                         </div>
-                    </div>
-                    <div v-else>
-                        <div class="card_title">
-                            <img src="../assets/book.png"  class="card_img">
-                            <div class="title_2">
-                                <span class="title1">{{i.title}}</span>
+                        <div v-if="!i.thumbnail">
+                            <div class="title_1" @click="gotoMessage(i.uid)">
+                                <span class="title">{{i.content}}</span>
                             </div>
                         </div>
+                        <div v-else>
+                            <div class="card_title" @click="gotoMessage(i.uid)">
+                                <img src="../assets/book.png"  class="card_img">
+                                <div class="title_2">
+                                    <span class="title1">{{i.content}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="manger">
+                            <div class="manger1">
+                                <div class="left">
+                                    <i class="el-icon-user"></i>
+                                    <span style="margin-left: 5px;width: 100px">{{i.name}}</span>
+                                    <i class="el-icon-time" style="margin-left: 12px"></i>
+                                    <span style="margin-left: 5px">{{i.create_date}}</span>
+                                </div>
+                                <div>
+                                    <el-button type="primary" class="icon_btn" style="margin-left: 400px"><i class="el-icon-view" style="color: black"></i></el-button>
+                                    <span>{{i.view_num}}</span>
+                                    <el-button type="primary" class="icon_btn"><i class="el-icon-chat-dot-square" style="color: black"></i></el-button>
+                                    <span>{{i.comment_num}}</span>
+                                    <el-button type="primary" class="icon_btn" @click="like(index)"  v-if="islike"><i class="el-icon-star-off" style="color: red"></i></el-button>
+                                    <el-button type="primary" class="icon_btn" @click="like(index)"  v-else><i class="el-icon-star-off" style="color: black"></i></el-button>
+                                    <span >{{i.like_num}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="line"></div>
                     </div>
-                    <div class="manger">
-                        <i class="el-icon-user"></i>
-                        <span style="margin-left: 5px">{{i.author}}</span>
-                        <i class="el-icon-time" style="margin-left: 12px"></i>
-                        <span style="margin-left: 5px">{{i.time}}</span>
-                        <el-button type="primary" class="icon_btn" style="margin-left: 450px"><i class="el-icon-view" style="color: black"></i></el-button>
-                        <span>{{i.watch}}</span>
-                        <el-button type="primary" class="icon_btn"><i class="el-icon-chat-dot-square" style="color: black"></i></el-button>
-                        <span>{{i.comment}}</span>
-                        <el-button type="primary" class="icon_btn"><i class="el-icon-star-off" style="color: black"></i></el-button>
-                        <span >{{i.like}}</span>
-                    </div>
-                    <div id="line"></div>
                 </div>
-            </div>
-        </el-card>
+            </el-card>
+        </div>
+        <div class="block">
+            <el-pagination
+                    layout="prev, pager, next"
+                    @current-change="current_change"
+                    :current-page.sync="currentPage"
+                    :page-size="4"
+                    :total="list.length">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
         name: "MyCard",
-        props:{manger:Array}
+        props:{list:Array},
+        data(){
+            return{
+                currentPage:1,
+                pagesize:4,
+                islike:true
+            }
+        },
+        methods:{
+            current_change(currentPage){
+                this.currentPage = currentPage
+            },
+            gotoMessage(id){
+                /* console.log('当前点击的id' + id);*/
+                this.$router.push({
+                    path:'/Message',
+                    query:{
+                        uid:id,
+                    }
+                })
+            },
+            like(index){
+                console.log(this.list[0].body)
+                if(this.islike){
+                    this.islike=!this.islike
+                    console.log(index)
+                    console.log(this.list)
+                    this.list[0].body[index].likeNum= this.list[0].body[index].likeNum-1
+                }
+                else{
+                    this.islike=!this.islike
+                    this.list[0].body[index].likeNum= this.list[0].body[index].likeNum+1
+                }
+            }
+
+        }
     }
 </script>
 
@@ -102,6 +155,11 @@
         position: absolute;
         top: 150px;
     }
+    .manger1{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     .card_img{
         float: left;
         width: 160px;
@@ -116,7 +174,6 @@
     }
     .title{
         width: 810px;
-        height: 90px;
         font-family: Microsoft YaHei UI;
         font-size: 14px;
         font-weight: normal;
@@ -155,5 +212,13 @@
         letter-spacing: 2px;
         color: #333333;
         margin-bottom: 15px;
+        overflow: hidden;
+        -webkit-line-clamp: 1;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+    }
+    .block{
+        text-align: center;
     }
 </style>

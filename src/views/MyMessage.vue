@@ -8,117 +8,72 @@
                 </div>
                 <div id="head_right">
                     <div id="search">
-                        <input style="border: 0px;margin-left: 10px;margin-top: 8px" placeholder="搜索">
-                        <el-button type="primary" class="icon_btn"><i class="el-icon-search" style="color: black"></i></el-button>
+                        <input style="border: 0px;margin-left: 10px;margin-top: 8px" placeholder="搜索" v-model="search_title">
+                        <el-button type="primary" class="icon_btn" @click="title_search"><i class="el-icon-search" style="color: black"></i></el-button>
                     </div>
                     <div id="icon_item">
-                        <el-button type="primary" class="icon_btn1"><i class="el-icon-circle-plus" style="color: blue"></i></el-button>
+                        <el-button type="primary" class="icon_btn1" @click="add"><i class="el-icon-circle-plus" style="color: blue"></i></el-button>
                         <el-button type="primary" class="icon_btn1"><i class="el-icon-message-solid" style="color: black"></i></el-button>
                         <el-button type="primary" class="icon_btn1"><i class="el-icon-setting" style="color: black"></i></el-button>
                     </div>
                     <div id="icon_user">
                         <el-button type="primary" class="icon_btn1"><i class="el-icon-user-solid" style="color: blue"></i></el-button>
-                        <span>{{username}}</span>
+                        <span>{{user.name}}</span>
                     </div>
                 </div>
             </div>
         </div>
         <div style="margin: 20px"></div>
         <div class="context">
-            <el-card class="box-card">
-                <div v-for="i in manger" :key="i" class="text item">
-                    <div id="box-card">
-                        <div class="card_head">
-                            <span class="head_card">{{i.head}}</span>
-                        </div>
-                        <div v-if="i.url==''">
-                            <div class="title_1">
-                                <span class="title">{{i.title}}</span>
-                            </div>
-                        </div>
-                        <div v-else>
-                            <div class="card_title">
-                                <img src="../assets/book.png"  class="card_img">
-                                <div class="title_2">
-                                    <span class="title1">{{i.title}}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="manger">
-                            <i class="el-icon-user"></i>
-                            <span style="margin-left: 5px">{{i.author}}</span>
-                            <i class="el-icon-time" style="margin-left: 12px"></i>
-                            <span style="margin-left: 5px">{{i.time}}</span>
-                            <el-button type="primary" class="icon_btn" style="margin-left: 450px"><i class="el-icon-view" style="color: black"></i></el-button>
-                            <span>{{i.watch}}</span>
-                            <el-button type="primary" class="icon_btn"><i class="el-icon-chat-dot-square" style="color: black"></i></el-button>
-                            <span>{{i.comment}}</span>
-                            <el-button type="primary" class="icon_btn"><i class="el-icon-star-off" style="color: black"></i></el-button>
-                            <span >{{i.like}}</span>
-                        </div>
-                        <div id="line"></div>
-                    </div>
-                </div>
-            </el-card>
-        </div>
-        <div class="block">
-            <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage4"
-                    :page-size="100"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="400">
-            </el-pagination>
+            <MyCard v-if="list!=null" :list="list"></MyCard>
         </div>
     </div>
 </template>
 
 <script>
+    import MyCard from "@/components/MyCard";
     export default {
         name: "MyMessage",
+        components: {MyCard},
         data(){
             return{
+                search_title:'',
                 username:'yeyeye',
-                manger:[{
-                    head:'面向对象、构造函数、原型与原型链',
-                    title:'如果要我总结一下学习前端以来我遇到了哪些瓶颈，那么面向对象一定是第一个毫不犹豫想到的。尽管我现在对于面向\n' +
-                        '对象有了一些的了解，但是当初的那种似懂非懂的痛苦，依然历历在目。为了帮助大家能够更加直观的学习和了解面向\n' +
-                        '对象，我会用尽量简单易懂的描述来展示面向对象的相关知识。如果要我总结一下学习前端以来我遇到了哪些瓶颈，那么面向对象一定是第一个毫不犹豫想到的。尽管我现在对于面向对象有了一些的了解，但是当初的那种似懂非懂的痛苦，依然历历在目。',
-                    url:'1',
-                    author:'我不是大神',
-                    time:'2019-12-14',
-                    watch:500,
-                    comment:166,
-                    like:241,
-                },{
-                    head:'Oracle创建数据库(数据库表空间)、表和用户',
-                    title:'11111111111111111111111',
-                    url:'1',
-                    author:'我不是大神',
-                    time:'2019-12-14',
-                    watch:500,
-                    comment:166,
-                    like:241,
-                },{
-                    head:'面向对象、构造函数、原型与原型链',
-                    title:'如果要我总结一下学习前端以来我遇到了哪些瓶颈，那么面向对象一定是第一个毫不犹豫想到的。尽管我现在对于面向对象有了一些的了解，但是当初的那种似懂非懂的痛苦，依然历历在目。为了帮助大家能够更加直观的学习和了解面向对象，我会用尽量简单易懂的描述来展示面向对象的相关知识。如果要我总结一下学习前端以来我遇到了哪些瓶颈，那么面向对象一定是第一个毫不犹豫想到的。尽管我现在对于面向对象有了一些的了解，但是当初的那种似懂非懂的痛苦，依然历历在目。为了帮助大家能够更加直观的学习和了解面向对象，我会用尽量简单易懂的描述来展示面向对象的相关知识。',
-                    url:'',
-                    author:'我不是大神',
-                    time:'2019-12-14',
-                    watch:500,
-                    comment:166,
-                    like:241,
-                }],
+                manger:{},
                 total:0,
                 pageNum:1,
                 pageSize:4,
                 currentPage:1,
+                user:{},
+                list:[],
+                userid:localStorage.getItem('userid')
             }
         },
+        created() {
+            this.getData();
+        },
         methods:{
-            handleSizeChange(val){
-                this.pageSize = val
+            getData(){
+                this.$axios.post('/api/article/findartbyuserid222?uid='+this.userid).then(res=>{
+                    this.list=res.data.body;
+                    console.log(this.list)
+                }).catch(function(){
+                })
+                this.$axios.post('/api/user/finduser?uid='+this.userid).then(res=>{
+                    this.user=res.data.body
+                    console.log(res.data.body)
+                })
+            },
+            add(){
+                this.$router.push({name:'Add'})
+            },
+            title_search(){
+                console.log(this.search_title)
+                this.$axios.post('/api/article/finduserbytitle111?title='+this.search_title+'&name='+this.user.account).then(res=>{
+                    this.list=res.data.body;
+                    console.log(this.list)
+                }).catch(function(){
+                })
             }
         }
     }
