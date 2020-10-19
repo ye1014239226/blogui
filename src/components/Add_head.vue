@@ -16,6 +16,11 @@
     export default {
         name: "Add_head",
         props:{info:Array},
+        data(){
+            return{
+                acid:0,
+            }
+        },
         methods:{
             gotoHome(){
                 this.$router.go(-1);
@@ -29,7 +34,7 @@
                     createDate: this.info.time,
                     isDeleted: false,
                     likeNum: 0,
-                    thumbnail: '',
+                    thumbnail: this.info.img,
                     title: this.info.title,
                     viewNum: 0
                 }).then(res=>{
@@ -38,6 +43,7 @@
                     this.$router.push({
                         name:'Home'
                     })
+                    this.$emit('acid',res.data.body.uid)
                 })
             }
         }

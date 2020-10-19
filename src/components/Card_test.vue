@@ -14,7 +14,7 @@
                         </div>
                         <div v-else>
                             <div class="card_title" @click="gotoMessage(i.uid)">
-                                <img src="../assets/book.png"  class="card_img">
+                                <img :src="require('../assets/'+i.thumbnail)"  class="card_img">
                                 <div class="title_2">
                                     <span class="title1">{{i.content}}</span>
                                 </div>
@@ -94,7 +94,7 @@
                         createDate: message.create_date,
                         isDeleted:  false,
                         likeNum: this.likenum,
-                        thumbnail:  message.head_picture,
+                        thumbnail:  message.thumbnail,
                         title:  message.title,
                         uid:  message.uid,
                         viewNum:  message.view_num,

@@ -30,7 +30,7 @@
                         </div>
                         <div>
                             <div class="comment_icon">
-                                <el-button type="primary" class="icon_btn" ><i class="el-icon-star-off" style="color: black"></i></el-button>
+                                <el-button type="primary" class="icon_btn" @click="like(i)"><i class="el-icon-star-off" style="color: black"></i></el-button>
                                 <span>{{i.like_num}}</span>
                                 <el-button type="primary" class="icon_btn"><i class="el-icon-chat-dot-square" style="color: black"></i></el-button>
                                 <span>{{i.comment_num}}</span>
@@ -91,6 +91,22 @@
                     alert('删除成功')
                 })
                 this.reload()
+            },
+            like(i){
+              console.log(i)
+                this.$axios.post('/api/comment/likecomment?accountId='+this.accountid+'&commentId='+i.uid).then(res=>{
+                    console.log(res.data)
+                    this.$axios.post('/api/comment/modifyComment',{
+                        accountId: i.account_id,
+                        articleId: i.article_id,
+                        commentNum: i.comment_num,
+                        content: i.content,
+                        createDate: i.create_date,
+                        likeNum: res.data.body,
+                        uid: i.uid
+                    })
+                    this.reload()
+                })
             }
         }
     }

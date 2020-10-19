@@ -7,14 +7,14 @@
                         <div class="card_head" @click="gotoMessage(i.uid)">
                             <span class="head_card">{{i.title}}</span>
                         </div>
-                        <div v-if="!i.thumbnail">
+                        <div v-if="i.thumbnail===''">
                             <div class="title_1" @click="gotoMessage(i.uid)">
                                 <span class="title">{{i.content}}</span>
                             </div>
                         </div>
                         <div v-else>
                             <div class="card_title" @click="gotoMessage(i.uid)">
-                                <img src="../assets/book.png"  class="card_img">
+                                <img :src="i.thumbnail"  class="card_img">
                                 <div class="title_2">
                                     <span class="title1">{{i.content}}</span>
                                 </div>

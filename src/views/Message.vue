@@ -11,7 +11,11 @@
                     </div>
                     <div style="width: 1000px;height: 1px;background-color: #dde4eb;margin-top: 15px"></div>
                     <Tag :dynamicTags="dynamicTags" :isauthor="isauthor" :uid="uid" class="tag"></Tag>
-                    <div id="text">
+                    <div id="text" v-if="!message.thumbnail">
+                        <span>{{message.content}}</span>
+                    </div>
+                    <div id="img_text" v-else>
+                        <img :src="require('../assets/'+message.thumbnail)"  class="img1">
                         <span>{{message.content}}</span>
                     </div>
                     <div>
@@ -27,6 +31,16 @@
                                 :file-list="fileList1">
                             <el-button size="small" type="primary"  v-if=isauthor @click="upload">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip"  v-if=isauthor>只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>
+                        <el-upload v-if="!message.thumbnail"
+                                class="avatar-uploader"
+                                :action="'/api/article/uploadpicture?uid='+this.uid"
+                                accept="image/png,image/gif,image/jpg,image/jpeg"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess"
+                                :before-upload="beforeAvatarUpload">
+                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </div>
                     <text_item v-if="message!=null" :message="message"></text_item>
@@ -78,7 +92,8 @@
                 iscollect:false,
                 isauthor:false,
                 time:'',
-                action:''
+                action:'',
+                isMessage:false
             }
         },
         watch:{
@@ -93,7 +108,26 @@
                 console.log(file, fileList);
             },
             handlePreview(file) {
-                console.log(file);
+                console.log(file.uid);
+                this.$confirm('下载该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$axios.post('/api/enclosure/download?uid='+file.uid).then(res=>{
+                        console.log(res)
+                    })
+                    this.$message({
+                        type: 'success',
+                        message: '下载成功!'
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消下载'
+                    });
+                });
+
             },
             handleExceed(files, fileList) {
                 this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
@@ -165,9 +199,26 @@
                 _this.time = yy+'-'+mm+'-'+dd+' '+hh+':'+mf+':'+ss;
                 console.log(this.time)
             },
-            upload(){
-
-            }
+            handleAvatarSuccess(res,file) {
+                console.log(file)
+                console.log(res)
+            },
+            beforeAvatarUpload(file) {
+                console.log('before')
+                if(!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
+                    this.$notify.warning({
+                        title: '警告',
+                        message: '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
+                    })
+                }
+                let size = file.size / 1024 / 1024 / 2
+                if(size > 2) {
+                    this.$notify.warning({
+                        title: '警告',
+                        message: '图片大小必须小于2M'
+                    })
+                }
+            },
         },
     }
 </script>
@@ -215,6 +266,14 @@
         margin-top: 20px;
         width: 900px;
         height: auto;
+    }
+    #img_text{
+        margin-top: 20px;
+        width: 900px;
+        height: auto;
+    }
+    #img1{
+        float: left;
     }
     .upload-demo{
         margin-top: 20px;

@@ -1,7 +1,6 @@
 <template>
     <div>
-        <Add_head v-if="info!=''" :info="info"></Add_head>
-        <div style="height: 20px"></div>
+        <Add_head v-if="info!=''" :info="info"  @child-event='parentEvent'></Add_head>
         <div class="context">
             <div>
                 <input class="input_title" type="text" placeholder="请输入您的标题" v-model="info.title">
@@ -10,7 +9,7 @@
                 <el-input
                         class="input_context"
                         type="textarea"
-                        :rows="35"
+                        :rows="20"
                         placeholder="请输入你的内容"
                         v-model="info.content">
                 </el-input>
@@ -32,8 +31,10 @@
                     content:'',
                     time:'',
                     accountid:localStorage.getItem('userid'),
-
-                }
+                    img:''
+                },
+                imageUrl:'',
+                uid:0,
             }
         },
         created(){
@@ -53,8 +54,11 @@
                 let ss = new Date().getSeconds()<10 ? '0'+new Date().getSeconds() : new Date().getSeconds();
                 _this.info.time = yy+'-'+mm+'-'+dd+' '+hh+':'+mf+':'+ss;
                 console.log(this.info.time)
+            },
+            parentEvent(data){
+                this.uid=data
             }
-        }
+        },
     }
 </script>
 
@@ -92,6 +96,30 @@
         letter-spacing: 1px;
         color: #666666;
         border: 0;
+    }
+
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
     }
 
 </style>
