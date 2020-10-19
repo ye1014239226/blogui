@@ -17,15 +17,15 @@
                     <div>
                         <el-upload
                                 class="upload-demo"
-                                action="https://jsonplaceholder.typicode.com/posts/"
+                                :action="action"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
                                 :before-remove="beforeRemove"
                                 multiple
                                 :limit="3"
                                 :on-exceed="handleExceed"
-                                :file-list="fileList">
-                            <el-button size="small" type="primary"  v-if=isauthor>点击上传</el-button>
+                                :file-list="fileList1">
+                            <el-button size="small" type="primary"  v-if=isauthor @click="upload">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip"  v-if=isauthor>只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                     </div>
@@ -62,7 +62,7 @@
         name: "Message",
         data(){
             return{
-                uid:'',
+                uid:0,
                 message:[],
                 title:"1-js基础教程",
                 islike:false,
@@ -71,13 +71,14 @@
                 inputValue: '',
                 text:'',
                 fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+                fileList1:[],
                 info:[],
                 textarea: '',
                 accountid:localStorage.getItem('userid'),
                 iscollect:false,
                 isauthor:false,
                 time:'',
-
+                action:''
             }
         },
         watch:{
@@ -102,6 +103,8 @@
             },
             getParams(){
                 this.uid = this.$route.query.uid
+                this.action="/api/enclosure/upload?articleId="+this.uid
+                console.log('action',this.action)
                 console.log('getParams',this.uid)
                 this.$axios.post('/api/article/findartbyid1?uid='+this.$route.query.uid).then(res=>{
                         this.message=res.data.body[0]
@@ -122,6 +125,12 @@
                 this.$axios.post('/api/label/findarticlesbyuser?aricleId='+this.uid).then(res=>{
                     console.log(res.data.body)
                     this.dynamicTags=res.data.body
+                })
+                this.$axios.post('/api/enclosure/findarticlesbyuser?articleId='+this.uid).then(res=>{
+                    console.log("文件")
+                    console.log(res.data)
+                    this.fileList1=res.data.body
+                    console.log(this.fileList1)
                 })
             },
             collect(){
@@ -155,6 +164,9 @@
                 let ss = new Date().getSeconds()<10 ? '0'+new Date().getSeconds() : new Date().getSeconds();
                 _this.time = yy+'-'+mm+'-'+dd+' '+hh+':'+mf+':'+ss;
                 console.log(this.time)
+            },
+            upload(){
+
             }
         },
     }

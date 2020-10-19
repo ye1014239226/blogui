@@ -23,8 +23,8 @@
 <script>
     import Add_head from "@/components/Add_head";
     export default {
-        components: {Add_head},
         name: "Add",
+        components: {Add_head},
         data(){
             return{
                 info:{
