@@ -12,26 +12,26 @@
                         <el-button type="primary" class="icon_btn" @click="title_search"><i class="el-icon-search" style="color: black"></i></el-button>
                     </div>
                     <div id="icon_item">
-                        <el-button type="primary" class="icon_btn1" @click="add"><i class="el-icon-circle-plus" style="color: blue"></i></el-button>
-                        <el-button type="primary" class="icon_btn1"><i class="el-icon-message-solid" style="color: black"></i></el-button>
-                        <el-button type="primary" class="icon_btn1"><i class="el-icon-setting" style="color: black"></i></el-button>
+                        <el-button type="primary" class="icon_btn1" @click="add"><i class="el-icon-circle-plus" style="color: blue;font-size:20px"></i></el-button>
+                        <el-button type="primary" class="icon_btn1"><i class="el-icon-message-solid" style="color: black;font-size:20px"></i></el-button>
+                        <el-button type="primary" class="icon_btn1"><i class="el-icon-setting" style="color: black;font-size:20px"></i></el-button>
                     </div>
                     <div id="icon_user">
-                        <el-button type="primary" class="icon_btn1"><i class="el-icon-user-solid" style="color: blue"></i></el-button>
+                        <el-button type="primary" class="icon_btn1" @click="gotomy"><i class="el-icon-user-solid" style="color: blue;font-size:20px"></i></el-button>
                         <span>{{user.account}}</span>
                     </div>
                 </div>
             </div>
         </div>
         <div style="margin: 20px"></div>
-        <Card v-if="list!=null" :list="list"></Card>
+        <Card_test v-if="list!=null" :list="list"></Card_test>
     </div>
 </template>
 
 <script>
-    import Card from "@/components/Card";
+    import Card_test from "@/components/Card_test";
     export default {
-        components: {Card},
+        components: {Card_test},
         name: "Home",
         data(){
             return{
@@ -79,6 +79,9 @@
                     console.log(this.manger)
                 }).catch(function(){
                 })
+            },
+            gotomy(){
+                this.$router.push({name:'MyMessage'})
             }
         }
     }
@@ -133,14 +136,10 @@
         border: solid 1px #cccccc;
     }
     .icon_btn{
-        width: 20px;
-        height: 26px;
         background-color: #FFFFFF;
         border: 0px
     }
     .icon_btn1{
-        width: 28px;
-        height: 28px;
         background-color: #FFFFFF;
         border: 0px
     }

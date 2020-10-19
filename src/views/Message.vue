@@ -10,7 +10,7 @@
                         <el-button v-else  @click="collect">未收藏</el-button>
                     </div>
                     <div style="width: 1000px;height: 1px;background-color: #dde4eb;margin-top: 15px"></div>
-                    <Tag :dynamicTags="dynamicTags" class="tag"></Tag>
+                    <Tag :dynamicTags="dynamicTags" :isauthor="isauthor" :uid="uid" class="tag"></Tag>
                     <div id="text">
                         <span>{{message.content}}</span>
                     </div>
@@ -66,7 +66,7 @@
                 message:[],
                 title:"1-js基础教程",
                 islike:false,
-                dynamicTags: ['标签一', '标签二', '标签三'],
+                dynamicTags:[],
                 inputVisible: false,
                 inputValue: '',
                 text:'',
@@ -76,7 +76,8 @@
                 accountid:localStorage.getItem('userid'),
                 iscollect:false,
                 isauthor:false,
-                time:''
+                time:'',
+
             }
         },
         watch:{
@@ -117,6 +118,10 @@
                 this.$axios.post('/api/comment/findAllCommentid?articleId='+this.uid).then(res=>{
                     console.log(res.data.body)
                     this.info=res.data.body
+                })
+                this.$axios.post('/api/label/findarticlesbyuser?aricleId='+this.uid).then(res=>{
+                    console.log(res.data.body)
+                    this.dynamicTags=res.data.body
                 })
             },
             collect(){

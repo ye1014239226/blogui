@@ -48,6 +48,7 @@
 <script>
     export default {
         name: "Comment",
+        inject:['reload'],
         props:{info:Array,isauthor:Boolean},
         data(){
             return{
@@ -85,12 +86,11 @@
             },
             del(index) {
               console.log(index)
-              this.$axios.post('/api/comment/deleteComment',{
-                  uid:index
-              }).then(res=>{
+              this.$axios.post('/api/comment/deleteComment?uid='+index).then(res=>{
                     console.log(res.data)
                     alert('删除成功')
                 })
+                this.reload()
             }
         }
     }

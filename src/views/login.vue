@@ -31,8 +31,8 @@
                             <button id="forget">忘记密码</button>
                         </div>
                     </div>
-                    <div class="btn_login">
-                        <button id="btn" @click="login()">登录</button>
+                    <div class="btn_login" @click="login()">
+                        <button id="btn">登录</button>
                     </div>
                 </div>
             </div>
@@ -49,9 +49,13 @@
                 loginForm:{
                     username:'',
                     password:'',
+                    remember:false,
                 },
-                checked:true,
+                checked:false,
             }
+        },
+        created(){
+            this.getCookie();
         },
         methods:{
             regist(){
@@ -60,9 +64,8 @@
             login(){
                 let _this=this;
                 let self=this;
-                if(self.checked==true){
-                    console.log("checked==true");
-                    self.setCookie(self.loginForm.username,self.loginForm.password,7);
+                if(self.loginForm.remember){
+                    self.setCookie(self.loginForm.username,self.loginForm.password,self.loginForm.remember,1);
                 }else{
                     console.log("清空Cookie");
                     self.clearCookie();
@@ -85,15 +88,16 @@
                         alert(res.data.message)
                     }
                 }).catch(
-                )
-                console.log(this.loginForm.username)
+                         )
+
             },
             //设置cookie
-            setCookie(c_name, c_pwd, exdays) {
+            setCookie(c_name, c_pwd, c_checked, exdays) {
                 var exdate = new Date(); //获取时间
                 exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
                 window.document.cookie = "account" + "=" + c_name + ";path=/;expires=" + exdate.toGMTString();
                 window.document.cookie = "password" + "=" + c_pwd + ";path=/;expires=" + exdate.toGMTString();
+                window.document.cookie = "checked" + "=" + c_checked + ";path=/;expires=" + exdate.toGMTString();
             },
             //读取cookie
             getCookie: function() {
@@ -102,17 +106,19 @@
                     for (var i = 0; i < arr.length; i++) {
                         var arr2 = arr[i].split('='); //再次切割
                         //判断查找相对应的值
-                        if (arr2[0] == 'userName') {
+                        if (arr2[0] == 'account') {
                             this.loginForm.username = arr2[1]; //保存到保存数据的地方
-                        } else if (arr2[0] == 'userPwd') {
+                        } else if (arr2[0] == 'password') {
                             this.loginForm.password = arr2[1];
+                        }else if(arr2[0] == 'checked'){
+                            this.loginForm.remember = arr2[1];
                         }
                     }
                 }
             },
             //清除cookie
             clearCookie: function() {
-                this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
+                this.setCookie("", "", "",-1);
             }
         }
     }

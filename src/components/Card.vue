@@ -101,7 +101,6 @@
             },
             isliked(id){
                this.$axios.post('/api/article/islikearticle?articleId='+id+'&accountId='+this.accountid).then(res=>{
-                    console.log("输出")
                     console.log(''+id+res.data)
                 })
             }

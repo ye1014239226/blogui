@@ -12,12 +12,12 @@
                         <el-button type="primary" class="icon_btn" @click="title_search"><i class="el-icon-search" style="color: black"></i></el-button>
                     </div>
                     <div id="icon_item">
-                        <el-button type="primary" class="icon_btn1" @click="add"><i class="el-icon-circle-plus" style="color: blue"></i></el-button>
-                        <el-button type="primary" class="icon_btn1"><i class="el-icon-message-solid" style="color: black"></i></el-button>
-                        <el-button type="primary" class="icon_btn1"><i class="el-icon-setting" style="color: black"></i></el-button>
+                        <el-button type="primary" class="icon_btn1" @click="add"><i class="el-icon-circle-plus" style="color: blue;font-size: 20px"></i></el-button>
+                        <el-button type="primary" class="icon_btn1"><i class="el-icon-message-solid" style="color: black;font-size: 20px"></i></el-button>
+                        <el-button type="primary" class="icon_btn1"><i class="el-icon-setting" style="color: black;font-size: 20px"></i></el-button>
                     </div>
                     <div id="icon_user">
-                        <el-button type="primary" class="icon_btn1"><i class="el-icon-user-solid" style="color: blue"></i></el-button>
+                        <el-button type="primary" class="icon_btn1"><i class="el-icon-user-solid" style="color: blue;font-size: 20px"></i></el-button>
                         <span>{{user.name}}</span>
                     </div>
                 </div>
@@ -152,8 +152,6 @@
         border: 0px
     }
     .icon_btn1{
-        width: 28px;
-        height: 28px;
         background-color: #FFFFFF;
         border: 0px
     }
@@ -166,6 +164,9 @@
         box-shadow: 0px 0px 6px 0px
         rgba(0, 0, 0, 0.1);
         border-radius: 4px;
+    }
+    #icon_item{
+        margin-left: 10px;
     }
     .card_head{
         font-size: 20px;
